@@ -11,19 +11,40 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Introdução
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Sempre que vamos escrever um projeto ou relatório, somos bombardeados por um gigantesca base de dados com artigos de relevância variável sobre o determinado assunto. Organizar e escolher os melhores artigos dentre essa imensidão de referências é uma dura tarefa, que muitas vezes pode demandar um tempo que muitos pesquisadores não têm. Contudo, com o advento do R e seus diversos pacotes, entre eles o "Bibliometrix", essa tarefa de comparar artigos para escolher os melhores se tornou muito mais fácil. Para exemplificar isso, foram escolhidos dois termos para se começar a busca de arquivos em base de dados (Scopus). Tais termos foram: "TCR" e "Signalling". Abaixo segue todo o procedimento com os códigos e gráficos possíveis de se fazer com o pacote "Bibliometrix".
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
+
+## Requerimentos
+
+Para a realização do trabalho, foram necessários alguns programas e pacotes, dentre eles:
+ 
+  - O próprio R: garante toda a linguagem R para se trabalhar;
+
+  - RStudio: um software com uma interface mais elegante e amigável ao usuário para ele conseguir trabalho;
+ 
+  - Git: um sistema de controle de versão distribuído. Utilizado juntamente do Rmarkdown para se fazer o upload direto do trabalho para um repositório em nuvem (Github);
+ 
+  - MikTex: programa necessário para a conversão do Script do Rmarkdown para PDf;
+  
+  - Pacote "Rmarkdown": converte scripts do R (mais especificamente do Rmarkdown) em uma variedade de formatos incluindo HTML, MS Word, PDF e Beamer. Além disso, o Rmarkdown consegue compilar os scripts em especíes de "livros" onde é possível colocar comentários, códigos fontes e a saída (resultado) do código do script;
+ 
+  - Pacote "Bibliometrix": garante um conjunto de ferramentas muito útil para análises na área de cientometria e bibliometria;
+
+  - Um arquivo Scopus.bib: arquivo baixado da base de dados Scopus com todas as informações de artigos escolhidos a partir das palavras-chaves selecionado.
+
+
+## Desenvolvimento
+
+Após a instalação do R, RStudio, Miktex e Git (lembrando que é necessário a criação de um diretório com o nome do trabalho no Git), é necessário fazer o download dos pacotes "Rmarkdown" e "Bibliometrix":
+
+```{r}
+install.packages("rmarkdown")
+install.packages("bibliometrix")
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
 plot(pressure)
