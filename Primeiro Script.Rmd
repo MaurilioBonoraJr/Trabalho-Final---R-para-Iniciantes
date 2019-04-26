@@ -2,7 +2,9 @@
 title: "Trabalho Final - R para Iniciantes"
 author: "Maurílio Bonora Júnior"
 date: "26/04/2019"
-output: pdf_document
+output:
+  word_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
