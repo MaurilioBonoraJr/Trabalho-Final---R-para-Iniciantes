@@ -38,12 +38,14 @@ Para a realização do trabalho, foram necessários alguns programas e pacotes, 
 
 ## Desenvolvimento
 
-Após a instalação do R, RStudio, Miktex e Git (lembrando que é necessário a criação de um diretório com o nome do trabalho no Git), é necessário fazer o download dos pacotes "Rmarkdown" e "Bibliometrix":
+Após a instalação do R, RStudio, Miktex e Git (lembrando que é necessário a criação de um diretório com o nome do trabalho no Git), é necessário fazer o download dos pacotes "Rmarkdown" e "Bibliometrix".
+
+Em seguida é necessário carregar o pacote "Bibliometrix":
 
 ```{r}
-install.packages("rmarkdown")
-install.packages("bibliometrix")
+library("bibliometrix")
 ```
+
 
 
 ```{r pressure, echo=FALSE}
