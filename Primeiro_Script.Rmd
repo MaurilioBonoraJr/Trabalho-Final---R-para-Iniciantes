@@ -74,8 +74,63 @@ Tal função retorna um objeto da classe bibliometrix (introduzida com o pacote 
 help("biblioAnalysis")
 ```
 
+Contudo, o objeto "results" que obtemos ainda é muito grande e complicado de se ler, sendo muito laborioso obter informações gerais a partir dali. Para isso, usa-se a função "summary" para se obter os principais resultados da nossa análise bibliométrica. Essa função aceita ainda dois argumentos adicionais: "k" é um valor de formatação que indica quantas linhas de cada tabela serão mostradas, enquanto "pause" é um valor lógico usado para permitir ou não a pausa na rolagem da tela.
+
+```{r}
+summary(results, k =10, pause = FALSE)
+```
+
+A partir daí obtemos uma série de resultados interessantes, desde as principais informações dos nossos dados - como nº de documentos, média de citações por artigos, nº de autores, nº de artigos com autores únicos - até informações mais curiosas como a produção de artios por ano desde o primeiro que foi publicado, autores mais produtivos, países com maiores nº de citações, principais fontes de artigos, entre diversas outras. Por fim, a partir dessas mesmos informações básicas obtidas, é possível montar gráficos que nos dão uma ideia bem mais visual da relação entre nossos dados, usando a função "plot".
+
+```{r}
+plot(x=results, k=10, pause=FALSE)
+```
 
 
+#### Análise de Referências Citadas
+
+É possível produzir uma tabela mostrando as referências mais citadas dos autores mais citados, utilizando-se a função "citations". Para se obter os artigos mais citadas, usa-se:
+
+```{r}
+CR <- citations(M, field = "article", sep = ";")
+cbind(CR$Cited[1:10])
+```
+
+Enquanto que para se obter os autores mais citados, usa-se:
+
+```{r}
+CR<- citations(M, field = "author", sep = ";")
+cbind(CR$Cited[1:10])
+```
+
+Por fim, é possível montar ainda uma tabela onde mostra-se os autores mais citados "localmente", isto é, dentre a base de dados que temos, quais foram os autores mais citados entre os outros autores dessa base. Para isso, utilizamos a função "LocalCitations". Utilizaremos as mesmas funções auxiliares usadas anteriormente para ver os 10 principais autores e principais artigos citados local e respectivamente:
+
+```{r}
+CR <- localCitations(M, sep = ";")
+CR$Authors[1:10,]
+CR$Papers[1:10,]
+```
+
+
+#### Ranking de Dominância de Autores
+
+O fator de dominância é uma taxa que indica a fração de artigos com múltiplos autores em que um pesquisador aparece como primeiro autor. A função "dominance" calcula o ranking da dominância entre os autores.
+
+```{r}
+DF <- dominance(results, k = 10)
+DF
+```
+
+
+#### O índice-h dos autores
+
+O índice-h é uma métrica que mede ambas produtividade e impacto de citação das publicações de cientistas. Esse índice é baseado no conjunto de artigos mais citados do autor em específico e no número de citações que esses artigos receberam em outras publicações. A função "Hindex" calcula o índice-h de autores ou de fontes e suas variantes (índice-g e índice-m) em uma conjunto de dados bibliográficos. Para calcular o índice-h dos 10 autores mais produtivos dessa coleção em específico, utilizaremos os seguintes códigos:
+
+```{r}
+authors=gsub(","," ",names(results$Authors)[1:10])
+indices <- Hindex(M, field = "author", elements=authors, sep = ";", years = 50)
+indices$H
+```
 
 
 ```{r pressure, echo=FALSE}
