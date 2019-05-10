@@ -16,7 +16,6 @@ knitr::opts_chunk$set(echo = TRUE)
 Sempre que vamos escrever um projeto ou relatório, somos bombardeados por um gigantesca base de dados com artigos de relevância variável sobre o determinado assunto. Organizar e escolher os melhores artigos dentre essa imensidão de referências é uma dura tarefa, que muitas vezes pode demandar um tempo que muitos pesquisadores não têm. Contudo, com o advento do R e seus diversos pacotes, entre eles o "Bibliometrix", essa tarefa de comparar artigos para escolher os melhores se tornou muito mais fácil. Para exemplificar isso, foram escolhidos dois termos para se começar a busca de arquivos em base de dados (Scopus). Tais termos foram: "TCR" e "Signalling". Abaixo segue todo o procedimento com os códigos e gráficos possíveis de se fazer com o pacote "Bibliometrix".
 
 
-
 ## Requerimentos
 
 Para a realização do trabalho, foram necessários alguns programas e pacotes, dentre eles:
@@ -38,13 +37,44 @@ Para a realização do trabalho, foram necessários alguns programas e pacotes, 
 
 ## Desenvolvimento
 
+#### Carregamento e Conversão dos Dados
+
 Após a instalação do R, RStudio, Miktex e Git (lembrando que é necessário a criação de um diretório com o nome do trabalho no Git), é necessário fazer o download dos pacotes "Rmarkdown" e "Bibliometrix".
 
 Em seguida é necessário carregar o pacote "Bibliometrix":
 
 ```{r}
-library("bibliometrix")
+library(bibliometrix)
 ```
+
+Já com o arquivo scopus.bib dentro da sua pasta de trabalho está na hora de começar a preparar os dados para as análises. A primeira função que será utilizada é "read.Files", que converte todos os arquivos de texto de scopus.bib em um grande vetor de caracteres que chamaremos de D.
+
+```{r}
+D<-readFiles("scopus.bib")
+```
+
+Esse grande objeto D pode então ser convertido em um DataFrame a partir da função "convert2df".
+
+```{r}
+M <- convert2df(D, dbsource = "scopus", format = "bibtex")
+```
+
+
+#### Análise Bibliométrica
+
+O primeiro passo para fazer uma análise descritiva desse Data Frame é utilizara função "biblioAnalysis", que irá calcular as principais medidas bibliométricas de toda nossa base de dados. 
+
+```{r}
+results<-biblioAnalysis(M, sep = ";")
+```
+
+Tal função retorna um objeto da classe bibliometrix (introduzida com o pacote homônimo), que contem os seguintes componentes como o número total de artigos, primeiro autor de cada manuscrito, número de vezes que cada manustrico foi citado, entre outros. Para mais informações use a função:
+
+```{r}
+help("biblioAnalysis")
+```
+
+
 
 
 

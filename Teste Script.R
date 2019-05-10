@@ -1,3 +1,4 @@
+install.packages("bibliometrix")
 library(bibliometrix)
 biblioshiny()
 D<-readFiles("scopus.bib")
