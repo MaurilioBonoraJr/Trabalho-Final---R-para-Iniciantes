@@ -133,6 +133,70 @@ indices$H
 ```
 
 
+#### Produtividade dos principais autores no decorrer do tempo
+
+A função "AuthorProdOverTime" facilmente consegue nos dar um gráfico mostrando a produção dos 10 primeiros autores (em termos de número de publicações e número de citações totais por ano) no decorrer do tempo.
+
+```{r}
+topAU <- authorProdOverTime(M, k = 10, graph = TRUE)
+```
+
+
+#### Estimativa do coeficiente da regra de Lotka
+
+A regra de Lotka descreve a frequência de publicação dos autores de um determinado campo como uma lei do quadrado inversa, onde o número de autores publicando um determinado número de artigos é uma taxa fixa para o número de autores publicando um artigo único. Essa suposição implica que o coeficiente beta teórico da regra de Lotka é igual a 2. A função "lotka" estima os coeficientes dessa regra de Lotka. Usando tal função é possível estimar por exemplo o coeficiente beta, dito anteriormente, de nossa coleção bibliográfica e acessar - a partir de um teste estatístico - a similaridade da distribuição empírica com uma teórica.
+
+  - Distribuição empírica da produtividade dos autores:
+
+```{r}
+L <- lotka(results)
+L$AuthorProd
+```
+
+
+  - Coeficiente beta estimado:
+```{r}
+L$Beta
+```
+
+
+  - Constante:
+```{r}
+L$C
+```
+
+
+  - Qualidade de ajuste:
+```{r}
+L$R2
+```
+
+
+  - Valor p dos dois testes K-S da amostra
+```{r}
+L$p.value
+```
+
+
+A tabela L$AuthorProd mostra a distribuição da produção científica observada em nosso exemplo. Nosso coeficiente beta é de aproximadamente 3.3 com uma qualiidade de ajuste de 0.98. Os dois testes (estatísticos) Kolmogorov-Smirnoff nos provê um valor p de 0.02, o que significa que basicamente não há diferença estatística entre nossos distribuições Lotka esperada e observada. Para uma visão gráfica disso, é possível usar a função plot:
+
+```{r}
+Observed=L$AuthorProd[,3]
+Theoretical=10^(log10(L$C)-2*log10(L$AuthorProd[,1]))
+plot(L$AuthorProd[,1],Theoretical,type="l",col="red",ylim=c(0, 1), xlab="Articles",ylab="Freq. of Authors",main="Scientific Productivity")
+lines(L$AuthorProd[,1],Observed,col="blue")
+legend(x="topright",c("Theoretical (B=2)","Observed"),col=c("red","blue"),lty = c(1,1,1),cex=0.6,bty="n")
+```
+
+
+## Matrizes de Redes Bibliográficas
+
+
+
+
+
+
+
 ```{r pressure, echo=FALSE}
 plot(pressure)
 ```
