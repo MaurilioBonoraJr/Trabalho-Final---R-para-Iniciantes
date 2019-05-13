@@ -191,10 +191,114 @@ legend(x="topright",c("Theoretical (B=2)","Observed"),col=c("red","blue"),lty = 
 
 ## Matrizes de Redes Bibliográficas
 
+As características de um artigo científico estão todas conectadas entre si a partir do próprio artigo, via os próprios autores ao revista ou periódico publicado, as palavras chaves com a data de publicação, etc. As conexões entre diferentes características geram redes bipartidas que podem ser representadas na forma de matrizes retangulares (artigo x qualquer que seja a característica). Além disso, publicação científicas normalmente possuem referências a outros artigos. Isso acaba por gerar uma nova rede, chamada rede de acoplamento ou de co-citação. Essas redes são utilizadas para analizar e capturar o real significado de certas propriedades em sistemas de pesquisas e, em particular, determinar a influência de algumas unidades bibliométricas como revistas e periódicos.
 
 
+#### Redes bipartidas
+
+A função "cocMatrix" é usada para computar uma rede bipartida selecionando um dos atributos dos dados, por exemplo, uma rede Artigo x Fonte da Publicação:
+
+```{r}
+A <- cocMatrix(M, Field = "SO", sep = ";")
+sort(Matrix::colSums(A), decreasing = TRUE)[1:5]
+```
 
 
+Seguindo a mesma lógica, é possível fazer outros tipos de redes bipartidárias: 
+
+  - Rede de citações
+
+```{r}
+A <- cocMatrix(M, Field = "CR", sep = ".  ")
+sort(Matrix::colSums(A), decreasing = TRUE)[1:5]
+```
+
+
+  - Rede de Autores:
+  
+```{r} 
+A <- cocMatrix(M, Field = "AU", sep = ";")
+sort(Matrix::colSums(A), decreasing = TRUE)[1:5]
+```
+
+
+  - Rede de palavras-chaves (dos autores):
+  
+```{r}   
+A <- cocMatrix(M, Field = "DE", sep = ";")
+sort(Matrix::colSums(A), decreasing = TRUE)[1:5]
+```
+
+
+#### Redes de acoplamento
+
+De acordo com Kessler (1993), podemos dizer que dois artigos estão acoplados bibliográficamente se pelo menos uma das fontes citadas aparece nas referências bibliográficas de ambos os artigos. A função "biblioNetwork" calcula, a partir de um data frame bibliográfico, as redes de acoplamento mais comumente usadas: de autores, de fontes e países.
+
+Artigos com poucas referências, consequentemente, tendem a ficar menos bibliograficamente acoplados (mais distantes um do outro em um gráfico), se a "força" de acoplamento é medida simplesmente pelo número de referências que aquele artigo tem em comum com outros. Isso nos sugere que pode ser melhor utilizar uma medida relativa (e não absoluta) para o acoplamento bibliográfico.
+
+Através da função "normalizeSimilarity", é possível se calcular a força de associação, inclusão e a similaridade de Jaccard ou Salton entre os vértices de uma rede. 
+
+Como exemplo, segue uma rede de acomplamento para os autores de nossos dados:
+
+```{r}
+NetMatrix <- biblioNetwork(M, analysis = "coupling", network = "authors", sep = ";")
+net=networkPlot(NetMatrix,  normalize = "salton", weighted=NULL, n = 100, Title = "Authors' Coupling", type = "fruchterman", size=5,size.cex=T,remove.multiple=TRUE,labelsize=0.8,label.n=10,label.cex=F)
+```
+
+
+#### Co-citação e colaboração bibliográfica
+
+Dois artigos são co-citados quando ambos são citadas por um mesmo artigo. Como qualquer outra rede, é possível fazer uma para co-citação utilizando-se a função "biblioNetwork".
+
+```{r}
+NetMatrix <- biblioNetwork(M, analysis = "co-citation", network = "references", sep = ";")
+net=networkPlot(NetMatrix, n = 30, Title = "Co-Citation Network", type = "fruchterman", size=T, remove.multiple=FALSE, labelsize=0.7,edgesize = 5)
+```
+
+Em uma rede de colaboração científica os nós são os autores enquanto que os links são as co-autorias de um artigo, pois já se sabe que o segundo é uma das formas mais bem documentadas de colaboração científica entre dois pesquisadores (de acordo com Glanzel, 2004).
+
+Novamente, usando a função "biblioNetwork", é possível calcular uma rede de colaboração científica por países, por exemplo:
+
+```{r}
+M <- metaTagExtraction(M, Field = "AU_CO", sep = ";")
+NetMatrix <- biblioNetwork(M, analysis = "collaboration", network = "countries", sep = ";")
+net=networkPlot(NetMatrix, n = dim(NetMatrix)[1], Title = "Country Collaboration", type = "circle", size=TRUE, remove.multiple=FALSE,labelsize=0.7,cluster="none")
+```
+
+
+## Análise descritiva das características gráficas de redes
+
+A função "networkStat" calcula várias estatísticas das nossas redes de forma resumida. Partindo de uma matriz bibliográfica, dois grupos de medidas descritivas são computadas:
+
+  - as estatísticas resumidas de uma rede
+ 
+```{r}
+NetMatrix <- biblioNetwork(M, analysis = "co-occurrences", network = "keywords", sep = ";")
+netstat <- networkStat(NetMatrix)
+names(netstat$network)
+```
+
+ - e os principais indíces referentes a centralidade e prestígio dos vértices
+
+```{r}
+NetMatrix <- biblioNetwork(M, analysis = "co-occurrences", network = "keywords", sep = ";")
+netstat <- networkStat(NetMatrix)
+names(netstat$vertex)
+```
+
+
+Para resumir os principais resultados da função "networkStat", é simples: usa-se a função "summary", que nos mostrará as principais informações sobre a rede e a descrição dos vértices através de várias tabelas.
+
+```{r}
+summary(netstat, k=10)
+```
+
+
+```{r}
+options(width=130)
+histResults <- histNetwork(M, min.citations = 10, sep = ";")
+net <- histPlot(histResults, n=15, size = 20, labelsize=10, size.cex=TRUE, arrowsize = 0.5, color = TRUE)
+```
 
 
 ```{r pressure, echo=FALSE}
