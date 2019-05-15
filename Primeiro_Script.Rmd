@@ -1,10 +1,12 @@
 ---
 title: "Trabalho Final - R para Iniciantes"
 author: "Maurílio Bonora Júnior"
-date: "26/04/2019"
+date: "15/05/2019"
 output:
-  word_document: default
+  html_document:
+    df_print: paged
   pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introdução
 
-Sempre que vamos escrever um projeto ou relatório, somos bombardeados por um gigantesca base de dados com artigos de relevância variável sobre o determinado assunto. Organizar e escolher os melhores artigos dentre essa imensidão de referências é uma dura tarefa, que muitas vezes pode demandar um tempo que muitos pesquisadores não têm. Contudo, com o advento do R e seus diversos pacotes, entre eles o "Bibliometrix", essa tarefa de comparar artigos para escolher os melhores se tornou muito mais fácil. Para exemplificar isso, foram escolhidos dois termos para se começar a busca de arquivos em base de dados (Scopus). Tais termos foram: "TCR" e "Signalling". Abaixo segue todo o procedimento com os códigos e gráficos possíveis de se fazer com o pacote "Bibliometrix".
+  Sempre que vamos escrever um projeto ou relatório, somos bombardeados por um gigantesca base de dados com artigos de relevância variável sobre o determinado assunto. Organizar e escolher os melhores artigos dentre essa imensidão de referências é uma dura tarefa, que muitas vezes pode demandar um tempo que muitos pesquisadores não têm. Contudo, com o advento do R e seus diversos pacotes, entre eles o "Bibliometrix", essa tarefa de comparar artigos para escolher os melhores se tornou muito mais fácil. Para exemplificar isso, foram escolhidos dois termos para se começar a busca de arquivos em base de dados (Scopus). Tais termos foram: "TCR" e "Signalling". A escolha dos termos foi feito baseado na experiência do autor desse trabalho, vide que a área de pesquisa desse se dá em tal área (Imunologia celular e molecular). Abaixo segue todo o procedimento com os códigos e gráficos possíveis de se fazer com o pacote "Bibliometrix".
 
 
 ## Requerimentos
@@ -189,7 +191,7 @@ legend(x="topright",c("Theoretical (B=2)","Observed"),col=c("red","blue"),lty = 
 ```
 
 
-## Matrizes de Redes Bibliográficas
+#### Matrizes de Redes Bibliográficas
 
 As características de um artigo científico estão todas conectadas entre si a partir do próprio artigo, via os próprios autores ao revista ou periódico publicado, as palavras chaves com a data de publicação, etc. As conexões entre diferentes características geram redes bipartidas que podem ser representadas na forma de matrizes retangulares (artigo x qualquer que seja a característica). Além disso, publicação científicas normalmente possuem referências a outros artigos. Isso acaba por gerar uma nova rede, chamada rede de acoplamento ou de co-citação. Essas redes são utilizadas para analizar e capturar o real significado de certas propriedades em sistemas de pesquisas e, em particular, determinar a influência de algumas unidades bibliométricas como revistas e periódicos.
 
@@ -266,7 +268,7 @@ net=networkPlot(NetMatrix, n = dim(NetMatrix)[1], Title = "Country Collaboration
 ```
 
 
-## Análise descritiva das características gráficas de redes
+#### Análise descritiva das características gráficas de redes
 
 A função "networkStat" calcula várias estatísticas das nossas redes de forma resumida. Partindo de uma matriz bibliográfica, dois grupos de medidas descritivas são computadas:
 
@@ -294,15 +296,54 @@ summary(netstat, k=10)
 ```
 
 
+#### Rede histórica de citações diretas
+
+Proposto por E. Garfield em 2004, o mapa historiográfico é um gráfico que representa uma rede cronológica mostrando as citações diretas mais importantes a partir da nossa coleção bibliográfica. Essa mapa é gerado a partir da função "histPlot" após se aplicar a função "histNetwork", capaz de montar essa rede cronológica de citações diretas.
+
 ```{r}
 options(width=130)
 histResults <- histNetwork(M, min.citations = 10, sep = ";")
+
 net <- histPlot(histResults, n=15, size = 20, labelsize=10, size.cex=TRUE, arrowsize = 0.5, color = TRUE)
 ```
 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Respostas encontradas
+
+Segue agora uma lista com todas os gráficos e tabelas montados durante o trabalho:
+
+  - Tabela contendo as principais informações de toda a coleção bibliográfica: número de documentos, fontes, palavras-chaves, tempo desde a publicação do primeiro ao último artigo, média de citações por artigo, informações referentes ao número de autores per se e por artigos, número de artigos por tipo de publicação, número de artigos publicados por ano, autores e países mais produtivos, artigos e países com mais citações, fontes e palavras chaves mais relevantes;
+  - Gráficos de autores e países mais produtivos, produção anual, média de citações por artigo e total por ano;
+  - Ranking de dominancia de autores;
+  - O índice-h dos principais autores;
+  - Gráfico e tabela mostrando a produtividade com o passar dos anos dos principais autores;
+  - Gráfico comparando a produtividade cientifica observada e teórica, dentro do tema escolhido;
+  - Vários gráficos demonstrando diferentes rede bibliográficas: de autores, de citação de colaboração entre países;
+  - Por fim, um gráfico demonstrativo de uma rede histórica das citações históricas mais importantes dentro de nossos dados
+  
+  
+
+## Dificuldades encontradas
+
+  As principais dificuldades foram relativas à algumas características referentes ao próprio Rmarkdown. Enquanto o guia do pacote "Bibliometrix" era muito bom e intuivo, o Rmarkdown teve alguns problemas. O principal deles foi referente ao salvamente (knit) para outros formatos. Mesmo com o software Miktex tendo sido instalado, não houve a mínima possibilidade de se salvar o script em pdf. Além disso, no formato word todos os gráficos e tabelas acabavam ficando desconfigurados em relação ao seu tamanho original e, por causa disso, acabou por se escolher como formato final de visualização o html. Além disso, outra dificuldade foi a em encontrar funções ou formas de se fazer o negrito. itálico e sublinhado no próprio rmarkdown, vide que a página de help dele dentro do próprio RStudio ou mesmo no Cran não detinham tal informação (ou se detinham estavam muito bem escondidas pois o autor desse trabalho e outros cinco alunos foram incapazes de encontrá-la). Outro problema com o próprio Rmarkdown foi a incapacidade de se inserir logo no começo do desenvolvimento as funções install.packages para o pacote do Rmarkdown per se e do Bibliometrics, pois repetidas vezes erros eram dados e o salvamento (knit) era impossibilitado de ser feito. Dito tudo isso, o trabalho foi relativamente fácil de se fazer, garantindo uma confiança muito maior ao autor deste que se acostumou a procurar a ajuda de diversas funções na tentativa de entende-las melhor e aplicar em seus próprios projetos algumas ideas obtidas no decorrer da execução deste.
+  
+  
+  
+## Bibliografia 
+
+Aria, M. & Cuccurullo, C. (2019). A brief introduction to bibliometrix (https://cran.r-project.org/web/packages/bibliometrix/vignettes/bibliometrix-vignette.html).
+
+Arquivo de Referência do Pacote "rmarkdown" (https://cran.r-project.org/web/packages/rmarkdown/rmarkdown.pdf).
+
+Arquivo de Referência do Pacote "bibliometrix" (https://cran.r-project.org/web/packages/bibliometrix/bibliometrix.pdf).
+
+Aria, M. & Cuccurullo, C. (2017). bibliometrix: An R-tool for comprehensive science mapping analysis, Journal of Informetrics, 11(4), pp 959-975, Elsevier, DOI: 10.1016/j.joi.2017.08.007 (https://doi.org/10.1016/j.joi.2017.08.007).
+
+Cuccurullo, C., Aria, M., & Sarto, F. (2016). Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains, Scientometrics, DOI: 10.1007/s11192-016-1948-8 (https://doi.org/10.1007/s11192-016-1948-8).
+
+Cuccurullo, C., Aria, M., & Sarto, F. (2015). Twenty years of research on performance management in business and public administration domains. Presentation at the Correspondence Analysis and Related Methods conference (CARME 2015) in September 2015 (http://www.bibliometrix.org/documents/2015Carme_cuccurulloetal.pdf).
+
+Sarto, F., Cuccurullo, C., & Aria, M. (2014). Exploring healthcare governance literature: systematic review and paths for future research. Mecosan (http://www.francoangeli.it/Riviste/Scheda_Rivista.aspx?IDarticolo=52780&lingua=en).
+
+Cuccurullo, C., Aria, M., & Sarto, F. (2013). Twenty years of research on performance management in business and public administration domains. In Academy of Management Proceedings (Vol. 2013, No. 1, p. 14270). Academy of Management (https://doi.org/10.5465/AMBPP.2013.14270abstract).
